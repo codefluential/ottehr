@@ -35,6 +35,5 @@ RUN chmod +x /app/scripts/*.sh
 # Ensure all files have compatible permissions
 RUN chmod -R 755 /app
 
-
 # Command to run the interactive setup
 CMD ["bash", "/app/scripts/ottehr-setup.sh"]
