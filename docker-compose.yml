@@ -12,5 +12,6 @@ services:
       SENDGRID_API_KEY: ${SENDGRID_API_KEY} # Pass the SendGrid API key
     volumes:
       - .:/app:delegated # Use delegated option for better performance on Windows
+      - /app/node_modules
     stdin_open: true # Enable interactive terminal
     tty: true # Keep the terminal open
