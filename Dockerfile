@@ -1,39 +1,33 @@
-# Use a Node.js base image
 FROM node:18-alpine
 
-# Install bash (required for setup script) and other necessary tools
-RUN apk add --no-cache bash dos2unix
+# Install bash, dos2unix, and build tools
+RUN apk add --no-cache bash dos2unix build-base python3
+
+# Install pnpm globally
+RUN npm install -g pnpm@9 && pnpm --version
 
 # Create a non-root user and group
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup
 
-# Set the working directory inside the container
+# Set the working directory and copy files
 WORKDIR /app
-
-# Copy files into the container and adjust ownership to the non-root user
 COPY --chown=appuser:appgroup . .
 COPY --chown=appuser:appgroup ./scripts/* /app/scripts/
+
+# Ensure correct ownership and writable permissions
+RUN chown -R appuser:appgroup /app && chmod -R u+w /app
 
 # Switch to the non-root user
 USER appuser
 
-# Install pnpm globally
-RUN npm install -g pnpm@9
-
 # Install project dependencies
 RUN pnpm install --unsafe-perm
 
-# Add ts-node as a development dependency to the workspace root
+# Add ts-node as a development dependency
 RUN pnpm add -D ts-node -w
 
-# Convert the script to Unix-style line endings
-RUN dos2unix /app/scripts/ottehr-setup.sh
+# Convert line endings and make scripts executable
+RUN dos2unix /app/scripts/ottehr-setup.sh && find /app/scripts -name "*.sh" -exec chmod +x {} \;
 
-# Make the setup script executable
-RUN chmod +x /app/scripts/*.sh
-
-# Ensure all files have compatible permissions
-RUN chmod -R 755 /app
-
-# Command to run the interactive setup
+# Run the setup script
 CMD ["bash", "/app/scripts/ottehr-setup.sh"]
