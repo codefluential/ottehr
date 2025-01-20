@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  ottehr-app:
+    build:
+      context: . # Build from the Dockerfile in the current directory
+    container_name: ottehr-app
+    ports:
+      - "3000:3000" # Expose port 3000 if needed
+    environment:
+      - NODE_ENV=production
+      - SENDGRID_API_KEY=${SENDGRID_API_KEY} # Pass the SendGrid API key
+    volumes:
+      - .:/app # Mount the current directory into the container
+    stdin_open: true # Enable interactive terminal
+    tty: true # Keep the terminal open
