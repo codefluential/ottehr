@@ -13,18 +13,22 @@ RUN addgroup -S appgroup && adduser -S appuser -G appgroup
 # Set the working directory
 WORKDIR /app
 
-# Copy files into the container
+# Copy files into the container with proper ownership
 COPY --chown=appuser:appgroup . .
 COPY --chown=appuser:appgroup ./scripts/* /app/scripts/
 
-# Ensure proper permissions for /app and node_modules
-RUN mkdir -p /app/node_modules && chown -R appuser:appgroup /app && chmod -R u+w /app
-
-# Ensure proper permissions for pnpm cache directory
-RUN mkdir -p /home/appuser/.pnpm-store && chown -R appuser:appgroup /home/appuser/.pnpm-store
+# Ensure proper permissions for /app, node_modules, and pnpm cache
+RUN mkdir -p /app/node_modules \
+    && mkdir -p /home/appuser/.pnpm-store \
+    && chown -R appuser:appgroup /app /home/appuser/.pnpm-store \
+    && chmod -R u+w /app /home/appuser/.pnpm-store
 
 # Switch to the non-root user
 USER appuser
+
+# Set the environment variable for pnpm store location to avoid permission issues
+ENV PNPM_HOME="/home/appuser/.pnpm-store"
+ENV PATH="$PNPM_HOME:$PATH"
 
 # Install project dependencies using pnpm with --unsafe-perm
 RUN pnpm install --unsafe-perm
