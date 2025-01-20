@@ -20,6 +20,12 @@ RUN pnpm install
 # Add ts-node as a development dependency to the workspace root
 RUN pnpm add -D ts-node -w
 
+# Install dos2unix
+RUN apk add --no-cache dos2unix
+
+# Convert the script to Unix-style line endings
+RUN dos2unix /app/scripts/ottehr-setup.sh
+
 # Make the setup script executable
 RUN chmod +x /app/scripts/*.sh
 
