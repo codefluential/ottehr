@@ -9,6 +9,7 @@ WORKDIR /app
 
 # Copy the entire project into the container
 COPY . .
+COPY ./scripts/* /app/scripts/
 
 # Install pnpm globally
 RUN npm install -g pnpm@9
@@ -20,7 +21,7 @@ RUN pnpm install
 RUN pnpm add -D ts-node -w
 
 # Make the setup script executable
-RUN chmod +x ./scripts/ottehr-setup.sh
+RUN chmod +x /app/scripts/*.sh
 
 # Command to run the interactive setup
-CMD ["bash", "./ottehr-setup.sh"]
+CMD ["bash", "/app/scripts/ottehr-setup.sh"]
