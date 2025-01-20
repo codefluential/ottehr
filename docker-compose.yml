@@ -8,9 +8,9 @@ services:
     ports:
       - "3000:3000" # Expose port 3000 if needed
     environment:
-      - NODE_ENV=production
-      - SENDGRID_API_KEY=${SENDGRID_API_KEY} # Pass the SendGrid API key
+      NODE_ENV: production
+      SENDGRID_API_KEY: ${SENDGRID_API_KEY} # Pass the SendGrid API key
     volumes:
-      - .:/app:cached # Use cached option to prevent file locking on Windows
+      - .:/app:delegated # Use delegated option for better performance on Windows
     stdin_open: true # Enable interactive terminal
     tty: true # Keep the terminal open
