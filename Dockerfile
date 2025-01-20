@@ -17,8 +17,11 @@ WORKDIR /app
 COPY --chown=appuser:appgroup . .
 COPY --chown=appuser:appgroup ./scripts/* /app/scripts/
 
-# Set correct permissions for /app and node_modules
+# Ensure proper permissions for /app and node_modules
 RUN mkdir -p /app/node_modules && chown -R appuser:appgroup /app && chmod -R u+w /app
+
+# Ensure proper permissions for pnpm cache directory
+RUN mkdir -p /home/appuser/.pnpm-store && chown -R appuser:appgroup /home/appuser/.pnpm-store
 
 # Switch to the non-root user
 USER appuser
