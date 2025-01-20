@@ -16,11 +16,11 @@ RUN npm install -g pnpm@9
 # Install project dependencies
 RUN pnpm install
 
-# Ensure ts-node is installed globally for TypeScript execution
-RUN pnpm add -D ts-node
+# Add ts-node as a development dependency to the workspace root
+RUN pnpm add -D ts-node -w
 
 # Make the setup script executable
-RUN chmod +x ./ottehr-setup.sh
+RUN chmod +x ./scripts/ottehr-setup.sh
 
 # Command to run the interactive setup
 CMD ["bash", "./ottehr-setup.sh"]
